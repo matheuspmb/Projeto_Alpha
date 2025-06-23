@@ -1,19 +1,14 @@
-bin/
-obj/
-.vs/
-*.user
-*.suo
-*.userosscache
-*.sln.docstates
-.vscode/
-*.dbmdl
-*.log
-*.pdb
-*.exe
-*.dll
-*.cache
-*.ide
-*.vspscc
-*.vssscc
-*.db
-*.bak
+# Geral
+node_modules/
+dist/
+.env
+
+# Vite
+frontend/.vite/
+frontend/dist/
+
+# Dotnet
+backend/bin/
+backend/obj/
+backend/.vs/
+backend/Properties/launchSettings.json
