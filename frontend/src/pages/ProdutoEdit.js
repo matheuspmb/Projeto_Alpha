@@ -32,20 +32,25 @@ function ProdutoEdit() {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      await api.put(`/produtos/${id}`, {
-        ...form,
-        valorVenda: parseFloat(form.valorVenda),
-        pesoBruto: parseFloat(form.pesoBruto),
-        pesoLiquido: parseFloat(form.pesoLiquido),
-      });
-      alert("Produto atualizado!");
-      window.location.href = "/produtos";
-    } catch {
+  e.preventDefault();
+  try {
+    await api.put(`/produtos/${id}`, {
+      ...form,
+      valorVenda: parseFloat(form.valorVenda),
+      pesoBruto: parseFloat(form.pesoBruto),
+      pesoLiquido: parseFloat(form.pesoLiquido)
+    });
+    alert("Produto atualizado!");
+    window.location.href = "/produtos";
+  } catch (err) {
+    if (err.response?.status === 400) {
+      const mensagens = Object.values(err.response.data).flat();
+      alert("Erros:\n" + mensagens.join("\n"));
+    } else {
       alert("Erro ao atualizar produto.");
     }
-  };
+  }
+};
 
   return (
     <div className="page-container">

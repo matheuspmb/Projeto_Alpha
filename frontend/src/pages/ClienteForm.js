@@ -17,11 +17,20 @@ function ClienteForm() {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+  e.preventDefault();
+  try {
     await api.post("/clientes", form);
     alert("Cliente cadastrado!");
     window.location.href = "/clientes";
-  };
+  } catch (err) {
+    if (err.response?.status === 400) {
+      const mensagens = Object.values(err.response.data).flat();
+      alert("Erros:\n" + mensagens.join("\n"));
+    } else {
+      alert("Erro ao cadastrar cliente.");
+    }
+  }
+};
 
   return (
     <div className="page-container">

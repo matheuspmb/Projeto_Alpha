@@ -16,21 +16,26 @@ function ProdutoForm() {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      await api.post("/produtos", {
-        ...form,
-        valorVenda: parseFloat(form.valorVenda),
-        pesoBruto: parseFloat(form.pesoBruto),
-        pesoLiquido: parseFloat(form.pesoLiquido),
-      });
-      alert("Produto cadastrado!");
-      window.location.href = "/produtos";
-    } catch {
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  try {
+    await api.post("/produtos", {
+      ...form,
+      valorVenda: parseFloat(form.valorVenda),
+      pesoBruto: parseFloat(form.pesoBruto),
+      pesoLiquido: parseFloat(form.pesoLiquido)
+    });
+    alert("Produto cadastrado!");
+    window.location.href = "/produtos";
+  } catch (err) {
+    if (err.response?.status === 400) {
+      const mensagens = Object.values(err.response.data).flat();
+      alert("Erros:\n" + mensagens.join("\n"));
+    } else {
       alert("Erro ao cadastrar produto.");
     }
-  };
+  }
+};
 
   return (
     <div className="page-container">

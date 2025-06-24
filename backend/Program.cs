@@ -6,7 +6,7 @@ using backend.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Configurar string de conexão com o banco
+// Configurando string de conexão com o banco
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
@@ -55,3 +55,4 @@ app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
 app.Run();
+

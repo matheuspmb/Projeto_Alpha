@@ -1,7 +1,7 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using backend.Data;
 using backend.Models;
-using Microsoft.AspNetCore.Authorization;
 
 namespace Backend.Controllers
 {
@@ -17,41 +17,40 @@ namespace Backend.Controllers
             _context = context;
         }
 
-        // GET: api/produtos
         [HttpGet]
         public ActionResult<IEnumerable<Produtos>> GetTodos()
         {
             return Ok(_context.Produtos.ToList());
         }
 
-        // GET: api/produtos/5
         [HttpGet("{id}")]
         public ActionResult<Produtos> GetPorId(int id)
         {
             var produto = _context.Produtos.Find(id);
-            if (produto == null)
-                return NotFound();
-
+            if (produto == null) return NotFound();
             return Ok(produto);
         }
 
-        // POST: api/produtos
         [HttpPost]
         public ActionResult<Produtos> Criar(Produtos produto)
         {
+            if (!ModelState.IsValid) // validação de ModelState
+                return BadRequest(ModelState); 
+
             _context.Produtos.Add(produto);
             _context.SaveChanges();
 
             return CreatedAtAction(nameof(GetPorId), new { id = produto.Id }, produto);
         }
 
-        // PUT: api/produtos/5
         [HttpPut("{id}")]
         public IActionResult Atualizar(int id, Produtos produto)
         {
+            if (!ModelState.IsValid) // validação de ModelState
+                return BadRequest(ModelState);
+
             var existente = _context.Produtos.Find(id);
-            if (existente == null)
-                return NotFound();
+            if (existente == null) return NotFound();
 
             existente.Codigo = produto.Codigo;
             existente.Descricao = produto.Descricao;
@@ -64,13 +63,11 @@ namespace Backend.Controllers
             return NoContent();
         }
 
-        // DELETE: api/produtos/5
         [HttpDelete("{id}")]
         public IActionResult Deletar(int id)
         {
             var produto = _context.Produtos.Find(id);
-            if (produto == null)
-                return NotFound();
+            if (produto == null) return NotFound();
 
             _context.Produtos.Remove(produto);
             _context.SaveChanges();

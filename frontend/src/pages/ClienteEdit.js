@@ -27,11 +27,20 @@ function ClienteEdit() {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+  e.preventDefault();
+  try {
     await api.put(`/clientes/${id}`, form);
     alert("Cliente atualizado!");
     window.location.href = "/clientes";
-  };
+  } catch (err) {
+    if (err.response?.status === 400) {
+      const mensagens = Object.values(err.response.data).flat();
+      alert("Erros:\n" + mensagens.join("\n"));
+    } else {
+      alert("Erro ao atualizar cliente.");
+    }
+  }
+};
 
   return (
     <div className="page-container">

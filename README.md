@@ -7,6 +7,12 @@
 - Frontend em React
 - Backend em ASP.NET Core Web API
 - Banco de dados SQL Server
+- Controllers com validação do `ModelState`
+- Erros retornados em JSON com status adequados (400, 401, 404, etc)
+- Backend retorna erro 400 com mensagens claras
+- Frontend trata erros de backend e exibe ao usuário
+- `Models` usam `[Required]` e `[MaxLength]` para validação
+- Validação dos formulários + tratamento de erro vindo do backend
 
 ---
 
