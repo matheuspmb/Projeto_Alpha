@@ -31,16 +31,18 @@
 ```
 backend/
 ├── Controllers/
-├── Models/
 ├── Data/
 ├── DTOs/
+├── Models/
 ├── Program.cs
 
 frontend/
 ├── src/
-|   ├── componentes/
+|   ├── assets/
+|   ├── components/
 │   ├── pages/
 │   ├── services/api.js
+│   ├── styles/
 │   └── App.js
 ```
 
@@ -88,8 +90,12 @@ dotnet run
 ### 3. Frontend
 ```bash
 cd frontend
+
+# Instalar dependências
 npm install
-npm run dev
+
+# Rodar o frontend (react)
+npm start
 ```
 
 ### 4. Testar a aplicação
