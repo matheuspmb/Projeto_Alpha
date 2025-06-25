@@ -27,20 +27,37 @@ function ClienteEdit() {
   };
 
   const handleSubmit = async (e) => {
-  e.preventDefault();
-  try {
-    await api.put(`/clientes/${id}`, form);
-    alert("Cliente atualizado!");
-    window.location.href = "/clientes";
-  } catch (err) {
-    if (err.response?.status === 400) {
-      const mensagens = Object.values(err.response.data).flat();
-      alert("Erros:\n" + mensagens.join("\n"));
-    } else {
-      alert("Erro ao atualizar cliente.");
+    e.preventDefault();
+    try {
+      await api.put(`/clientes/${id}`, form);
+      alert("Cliente atualizado!");
+      window.location.href = "/clientes";
+    } catch (err) {
+      if (err.response) {
+        const { status, data } = err.response;
+
+        if (status === 400 && typeof data === 'object') {
+          const mensagens = Object.entries(data)
+            .map(([campo, erros]) => {
+              if (Array.isArray(erros)) return `${campo}: ${erros.join(", ")}`;
+              return `${campo}: ${erros}`;
+            });
+          alert("Erros de validação:\n" + mensagens.join("\n"));
+        } else if (status === 401) {
+          alert(data.mensagem || "Não autorizado. Verifique login ou token.");
+        } else if (status === 404) {
+          alert("Recurso não encontrado.");
+        } else if (status === 500) {
+          alert("Erro interno do servidor. Tente novamente mais tarde.");
+        } else {
+          alert(data.mensagem || "Erro inesperado.");
+        }
+
+      } else {
+        alert("Erro na conexão com o servidor.");
+      }
     }
-  }
-};
+  };
 
   return (
     <div className="page-container">

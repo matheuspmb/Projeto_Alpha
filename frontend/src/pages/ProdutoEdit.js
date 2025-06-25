@@ -32,25 +32,42 @@ function ProdutoEdit() {
   };
 
   const handleSubmit = async (e) => {
-  e.preventDefault();
-  try {
-    await api.put(`/produtos/${id}`, {
-      ...form,
-      valorVenda: parseFloat(form.valorVenda),
-      pesoBruto: parseFloat(form.pesoBruto),
-      pesoLiquido: parseFloat(form.pesoLiquido)
-    });
-    alert("Produto atualizado!");
-    window.location.href = "/produtos";
-  } catch (err) {
-    if (err.response?.status === 400) {
-      const mensagens = Object.values(err.response.data).flat();
-      alert("Erros:\n" + mensagens.join("\n"));
-    } else {
-      alert("Erro ao atualizar produto.");
+    e.preventDefault();
+    try {
+      await api.put(`/produtos/${id}`, {
+        ...form,
+        valorVenda: parseFloat(form.valorVenda),
+        pesoBruto: parseFloat(form.pesoBruto),
+        pesoLiquido: parseFloat(form.pesoLiquido)
+      });
+      alert("Produto atualizado!");
+      window.location.href = "/produtos";
+    } catch (err) {
+      if (err.response) {
+        const { status, data } = err.response;
+
+        if (status === 400 && typeof data === 'object') {
+          const mensagens = Object.entries(data)
+            .map(([campo, erros]) => {
+              if (Array.isArray(erros)) return `${campo}: ${erros.join(", ")}`;
+              return `${campo}: ${erros}`;
+            });
+          alert("Erros de validação:\n" + mensagens.join("\n"));
+        } else if (status === 401) {
+          alert(data.mensagem || "Não autorizado. Verifique login ou token.");
+        } else if (status === 404) {
+          alert("Recurso não encontrado.");
+        } else if (status === 500) {
+          alert("Erro interno do servidor. Tente novamente mais tarde.");
+        } else {
+          alert(data.mensagem || "Erro inesperado.");
+        }
+
+      } else {
+        alert("Erro na conexão com o servidor.");
+      }
     }
-  }
-};
+  };
 
   return (
     <div className="page-container">
@@ -94,7 +111,7 @@ function ProdutoEdit() {
             <button type="button" onClick={() => window.location.href = "/produtos"}>Cancelar</button>
           </div>
         </form>
-        
+
       </div>
     </div>
   );
